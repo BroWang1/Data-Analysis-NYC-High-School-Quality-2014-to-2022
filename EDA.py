@@ -1,5 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('TkAgg')
 import seaborn as sns
 import numpy as np
 
@@ -61,5 +63,11 @@ data_2022_Additional_Info = convert_sheet_to_numeric_or_keep(data_2022_Additiona
 
 
 #print(list(data_2020_Additional_Info.columns))
-print(data_2020_Additional_Info.isnull().sum())
-print(data_2020_Additional_Info.describe())
+# print(data_2020_Additional_Info.isnull().sum())
+# print(data_2020_Additional_Info.describe())
+data_2020_Additional_Info = data_2020_Additional_Info.apply(pd.to_numeric, errors='coerce')
+
+# Now calculate the correlation
+sns.heatmap(data_2020_Additional_Info.corr(), annot=True)
+plt.rcParams['figure.figsize'] = (10, 10)
+plt.show(block=True)
