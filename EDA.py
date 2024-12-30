@@ -68,6 +68,6 @@ data_2022_Additional_Info = convert_sheet_to_numeric_or_keep(data_2022_Additiona
 data_2020_Additional_Info = data_2020_Additional_Info.apply(pd.to_numeric, errors='coerce')
 
 # Now calculate the correlation
-sns.heatmap(data_2020_Additional_Info.corr(), annot=True)
-plt.rcParams['figure.figsize'] = (10, 10)
-plt.show(block=True)
+# sns.heatmap(data_2020_Additional_Info.corr(), annot=True)
+# plt.rcParams['figure.figsize'] = (10, 10)
+# plt.show(block=True)
