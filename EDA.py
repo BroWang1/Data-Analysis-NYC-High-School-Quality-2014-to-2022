@@ -34,36 +34,35 @@ for file, year in file_paths.items():   # This is to print all the sheet names i
     all_file_sheets.update(sheetname)
 print(all_file_sheets)  # List of sheets for all excel sheets
 
-data_2020 = master_data_struc['2020/21']["Summary"]
-data_2021 = master_data_struc['2021/22']["Summary"]
-data_2022 = master_data_struc['2022/23']["Summary"]
-data_2020_Student = master_data_struc['2020/21']["Student Achievement"]
-data_2021_Student = master_data_struc['2021/22']["Student Achievement"]
-data_2022_Student = master_data_struc['2022/23']["Student Achievement"]
-data_2020_Additional_Info = master_data_struc['2020/21']["Additional Info"]
-data_2021_Additional_Info = master_data_struc['2021/22']["Additional Info"]
-data_2022_Additional_Info = master_data_struc['2022/23']["Additional Info"]
-data_2020_Framework = master_data_struc['2020/21']["Framework"]
-data_2021_Framework = master_data_struc['2021/22']["Framework"]
-data_2022_Framework = master_data_struc['2022/23']["Framework"]
-
-
 def convert_sheet_to_numeric_or_keep(df):
     def convert_numeric_or_keep(col):
         col = col.replace('N<15', np.nan)
+        col = col.replace('N<5', np.nan)
         col = col.replace('%', '', regex=True)
+        col = col.replace(r'^\s*$', '0', regex=True)
         numeric_col = pd.to_numeric(col, errors='coerce')
         return np.where(numeric_col.notna(), numeric_col, col)
     return df.apply(lambda col: convert_numeric_or_keep(col))
 
+data_2020 = convert_sheet_to_numeric_or_keep(master_data_struc['2020/21']["Summary"])
+data_2021 = convert_sheet_to_numeric_or_keep(master_data_struc['2021/22']["Summary"])
+data_2022 = convert_sheet_to_numeric_or_keep(master_data_struc['2022/23']["Summary"])
+data_2020_Student = convert_sheet_to_numeric_or_keep(master_data_struc['2020/21']["Student Achievement"])
+data_2021_Student = convert_sheet_to_numeric_or_keep(master_data_struc['2021/22']["Student Achievement"])
+data_2022_Student = convert_sheet_to_numeric_or_keep(master_data_struc['2022/23']["Student Achievement"])
+data_2020_Additional_Info = convert_sheet_to_numeric_or_keep(master_data_struc['2020/21']["Additional Info"])
+data_2021_Additional_Info = convert_sheet_to_numeric_or_keep(master_data_struc['2021/22']["Additional Info"])
+data_2022_Additional_Info = convert_sheet_to_numeric_or_keep(master_data_struc['2022/23']["Additional Info"])
+data_2020_Framework = convert_sheet_to_numeric_or_keep(master_data_struc['2020/21']["Framework"])
+data_2021_Framework = convert_sheet_to_numeric_or_keep(master_data_struc['2021/22']["Framework"])
+data_2022_Framework = convert_sheet_to_numeric_or_keep(master_data_struc['2022/23']["Framework"])
 
-data_2020_Additional_Info = convert_sheet_to_numeric_or_keep(data_2020_Additional_Info)
-data_2021_Additional_Info = convert_sheet_to_numeric_or_keep(data_2021_Additional_Info)
-data_2022_Additional_Info = convert_sheet_to_numeric_or_keep(data_2022_Additional_Info)
 
+#df = df.rename(columns = {'name on sheets': 'name wanted',...etc)  #this is to rename so it can be easier to read
+#df.duplicated()    #this is to find if there are any duplicated in the dataset
 
-#print(list(data_2020_Additional_Info.columns))
-# print(data_2020_Additional_Info.isnull().sum())
+print(list(data_2020_Additional_Info.columns))
+# print(data_2020_Additional_Info.isnull().sum())   # This is to find the number of missing data in each column
 # print(data_2020_Additional_Info.describe())
 data_2020_Additional_Info = data_2020_Additional_Info.apply(pd.to_numeric, errors='coerce')
 
