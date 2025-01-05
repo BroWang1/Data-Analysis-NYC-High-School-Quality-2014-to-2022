@@ -10,6 +10,7 @@ file_paths = {r'/Users/thewang/Downloads/NYC High School Quality Data Set/2014_2
               r'/Users/thewang/Downloads/NYC High School Quality Data Set/2016-17_hs_sqr.xlsx': '2016/17',
               r'/Users/thewang/Downloads/NYC High School Quality Data Set/201718_hs_sqr_results.xlsx': '2017/18',
               r'/Users/thewang/Downloads/NYC High School Quality Data Set/201819_hs_sqr_results.xlsx': '2018/19',
+              r'/Users/thewang/Downloads/NYC High School Quality Data Set/2019-20_School_Quality_Guide_High_School_Revision_.xlsx': '2019/20',
               r'/Users/thewang/Downloads/NYC High School Quality Data Set/202021-hs-sqr-results.xlsx': '2020/21',
               r'/Users/thewang/Downloads/NYC High School Quality Data Set/202122-hs-sqr-results.xlsx': '2021/22',
               r'/Users/thewang/Downloads/NYC High School Quality Data Set/202223-hs-sqr-results.xlsx': '2022/23'
@@ -71,7 +72,7 @@ data_2015_Additional_Info = convert_sheet_to_numeric_or_keep(master_data_struc['
 data_2016_Additional_Info = convert_sheet_to_numeric_or_keep(master_data_struc['2016/17']["Additional Info"])
 data_2017_Additional_Info = convert_sheet_to_numeric_or_keep(master_data_struc['2017/18']["Additional Info"])
 data_2018_Additional_Info = convert_sheet_to_numeric_or_keep(master_data_struc['2018/19']["Additional Info"])
-#data_2019_Additional_Info = convert_sheet_to_numeric_or_keep(master_data_struc['2019/20']["Additional Info"])
+data_2019_Additional_Info = convert_sheet_to_numeric_or_keep(master_data_struc['2019/20']["Additional Info"])
 data_2020_Additional_Info = convert_sheet_to_numeric_or_keep(master_data_struc['2020/21']["Additional Info"])
 data_2021_Additional_Info = convert_sheet_to_numeric_or_keep(master_data_struc['2021/22']["Additional Info"])
 data_2022_Additional_Info = convert_sheet_to_numeric_or_keep(master_data_struc['2022/23']["Additional Info"])
