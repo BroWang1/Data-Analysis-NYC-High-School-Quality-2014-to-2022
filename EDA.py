@@ -36,7 +36,7 @@ for file, year in file_paths.items():
 
         try:
             sheetdata = pd.read_excel(loading_excel, sheet_name=sheet_name, header=3, usecols=usecols)
-            print(sheetdata)
+            #print(sheetdata)
             year_data[sheet_name] = sheetdata
         except ValueError as e:
             print(f"Error reading {sheet_name}: {e}")
