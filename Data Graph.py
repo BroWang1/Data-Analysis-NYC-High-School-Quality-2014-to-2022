@@ -6,6 +6,7 @@ matplotlib.use('TkAgg')
 import seaborn as sns
 import numpy as np
 
+# I need to also find a better way to deal with this too
 data_2014_Additional_Info['SAT Total'] = data_2014_Additional_Info['Average Score SAT Math'] + data_2014_Additional_Info['Average Score SAT Writing']
 data_2015_Additional_Info['SAT Total'] = data_2015_Additional_Info['Average Score SAT Math'] + data_2015_Additional_Info['Average Score SAT Writing']
 data_2016_Additional_Info['SAT Total'] = data_2016_Additional_Info['Metric Value - Average Score SAT Math'] + data_2016_Additional_Info['Metric Value - Average Score SAT Reading and Writing']

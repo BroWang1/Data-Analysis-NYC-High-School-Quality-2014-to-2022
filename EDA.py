@@ -50,7 +50,7 @@ for file, year in file_paths.items():   # This is to print all the sheet names i
     all_file_sheets.update(sheetname)
 print(all_file_sheets)  # List of sheets for all excel sheets
 
-def convert_sheet_to_numeric_or_keep(df):
+def convert_sheet_to_numeric_or_keep(df):       # this is to clean the data a little so I can use it better
     def convert_numeric_or_keep(col):
         col = col.replace({'N<15': 0, 'N<5': 0, 'N/A': 0, '': 0})
         col = col.replace('%', '', regex=True)
@@ -60,7 +60,7 @@ def convert_sheet_to_numeric_or_keep(df):
     return df.apply(lambda col: convert_numeric_or_keep(col))
 
 #print(master_data_struc.keys())
-data_2020 = convert_sheet_to_numeric_or_keep(master_data_struc['2020/21']["Summary"])
+data_2020 = convert_sheet_to_numeric_or_keep(master_data_struc['2020/21']["Summary"])    #Ill be looking for a better way to get this streamlined so I dont need to creat a line each time
 data_2021 = convert_sheet_to_numeric_or_keep(master_data_struc['2021/22']["Summary"])
 data_2022 = convert_sheet_to_numeric_or_keep(master_data_struc['2022/23']["Summary"])
 data_2020_Student = convert_sheet_to_numeric_or_keep(master_data_struc['2020/21']["Student Achievement"])
