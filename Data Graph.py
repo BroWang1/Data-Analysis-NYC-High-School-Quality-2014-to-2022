@@ -50,6 +50,7 @@ for year, sat_math_col, sat_writing_col, new_column_name in years_data:
 
 # Combine all the processed data into one DataFrame
 all_years_SAT = pd.concat(all_years_data, ignore_index=True).sort_values(by='Year')
+print(all_years_SAT.dtypes)
 #This is to check out of all the school in the past 8 years what is the ranking
 # sorted_df = all_years_SAT.sort_values(by='SAT Total', ascending=False)
 # print(sorted_df[['School Name', 'SAT Total', 'Year']].head(10))
