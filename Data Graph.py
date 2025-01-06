@@ -57,13 +57,11 @@ print(all_years_SAT.dtypes)
 
 #top 10 per year sat scores
 top_5_per_year = all_years_SAT.groupby('Year', group_keys=False).apply(
-    lambda x: x.sort_values(by='SAT Total', ascending=False).head(5)
-)
+    lambda x: x.sort_values(by='SAT Total', ascending=False).head(5))
 print(top_5_per_year[['School Name', 'SAT Total', 'Year']])
 
 bottom_5_per_year = all_years_SAT.groupby('Year', group_keys=False).apply(
-    lambda x: x.dropna(subset=['SAT Total']).sort_values(by='SAT Total', ascending=False).tail(5)
-)
+    lambda x: x.dropna(subset=['SAT Total']).sort_values(by='SAT Total', ascending=False).tail(5))
 print(bottom_5_per_year[['School Name', 'SAT Total', 'Year']])
 
 avg_SAT_score = all_years_SAT.groupby('Year')['SAT Total'].mean().reset_index()     # Average SAT
