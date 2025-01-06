@@ -50,13 +50,27 @@ for year, sat_math_col, sat_writing_col, new_column_name in years_data:
 
 # Combine all the processed data into one DataFrame
 all_years_SAT = pd.concat(all_years_data, ignore_index=True).sort_values(by='Year')
+#This is to check out of all the school in the past 8 years what is the ranking
+# sorted_df = all_years_SAT.sort_values(by='SAT Total', ascending=False)
+# print(sorted_df[['School Name', 'SAT Total', 'Year']].head(10))
 
-# Calculate the average SAT scores per year
-avg_SAT_score = all_years_SAT.groupby('Year')['SAT Total'].mean().reset_index()
+#top 10 per year sat scores
+top_5_per_year = all_years_SAT.groupby('Year', group_keys=False).apply(
+    lambda x: x.sort_values(by='SAT Total', ascending=False).head(5)
+)
+print(top_5_per_year[['School Name', 'SAT Total', 'Year']])
 
-# Plotting
+bottom_5_per_year = all_years_SAT.groupby('Year', group_keys=False).apply(
+    lambda x: x.dropna(subset=['SAT Total']).sort_values(by='SAT Total', ascending=False).tail(5)
+)
+print(bottom_5_per_year[['School Name', 'SAT Total', 'Year']])
+
+avg_SAT_score = all_years_SAT.groupby('Year')['SAT Total'].mean().reset_index()     # Average SAT
+percentile_75 = all_years_SAT.groupby('Year')['SAT Total'].quantile(0.75).reset_index()  # 75th percentile SAT
+print(percentile_75)
 plt.scatter(all_years_SAT['Year'], all_years_SAT['SAT Total'], label='Data Points', color='blue')
 plt.plot(avg_SAT_score['Year'], avg_SAT_score['SAT Total'], label='Average Trend Line', color='orange', linewidth=2)
+plt.plot(percentile_75['Year'], percentile_75['SAT Total'], label='75% Percentile Trend Line', color='red', linewidth=2)
 plt.xlabel('Year')
 plt.ylabel('SAT Total')
 plt.title('SAT Total Scores Over Years')
