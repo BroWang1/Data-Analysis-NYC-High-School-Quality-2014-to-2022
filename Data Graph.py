@@ -49,19 +49,31 @@ for year, sat_math_col, sat_writing_col, new_column_name in years_data:
         all_years_data.append(processed_data)
 
 # Combine all the processed data into one DataFrame
-all_years_SAT = pd.concat(all_years_data, ignore_index=True).sort_values(by='Year')
+all_years_SAT = (
+    pd
+    .concat(all_years_data, ignore_index=True)
+    .sort_values(by='Year')
+)
 print(all_years_SAT.dtypes)
 #This is to check out of all the school in the past 8 years what is the ranking
 # sorted_df = all_years_SAT.sort_values(by='SAT Total', ascending=False)
 # print(sorted_df[['School Name', 'SAT Total', 'Year']].head(10))
 
 #top 10 per year sat scores
-top_5_per_year = all_years_SAT.groupby('Year', group_keys=False).apply(
-    lambda x: x.sort_values(by='SAT Total', ascending=False).head(5))
+top_5_per_year = (
+    all_years_SAT                                                       # DataFrame
+    .groupby('Year', group_keys=False)                              # Grouping by the Year
+    .apply(lambda x: x.sort_values(by='SAT Total', ascending=False))    # Since in a Group using apply to sort
+    .head(5)                                                            # This is to get the top 5 from the sorted
+)
 print(top_5_per_year[['School Name', 'SAT Total', 'Year']])
 
-bottom_5_per_year = all_years_SAT.groupby('Year', group_keys=False).apply(
-    lambda x: x.dropna(subset=['SAT Total']).sort_values(by='SAT Total', ascending=False).tail(5))
+bottom_5_per_year = (
+    all_years_SAT.groupby('Year', group_keys=False)
+    .apply(lambda x: x.dropna(subset=['SAT Total'])
+           .sort_values(by='SAT Total', ascending=False))
+    .tail(5)
+)
 print(bottom_5_per_year[['School Name', 'SAT Total', 'Year']])
 
 avg_SAT_score = all_years_SAT.groupby('Year')['SAT Total'].mean().reset_index()     # Average SAT
@@ -75,62 +87,3 @@ plt.ylabel('SAT Total')
 plt.title('SAT Total Scores Over Years')
 plt.legend()
 plt.show()
-# How I orginally did it
-# data_2014_Additional_Info['SAT Total'] = data_2014_Additional_Info['Average Score SAT Math'] + data_2014_Additional_Info['Average Score SAT Writing']
-# data_2015_Additional_Info['SAT Total'] = data_2015_Additional_Info['Average Score SAT Math'] + data_2015_Additional_Info['Average Score SAT Writing']
-# data_2016_Additional_Info['SAT Total'] = data_2016_Additional_Info['Metric Value - Average Score SAT Math'] + data_2016_Additional_Info['Metric Value - Average Score SAT Reading and Writing']
-# data_2017_Additional_Info['SAT Total'] = data_2017_Additional_Info['Metric Value - Average score of students in the current cohort who took the SAT Math exam'] + data_2017_Additional_Info['Metric Value - Average score of students in the current cohort who took the SAT Reading and Writing exam']
-# data_2018_Additional_Info['SAT Total'] = data_2018_Additional_Info['Metric Value - Average score of students in the current cohort who took the SAT Math exam'] + data_2018_Additional_Info['Metric Value - Average score of students in the current cohort who took the SAT Reading and Writing exam']
-# data_2019_Additional_Info['SAT Total'] = data_2019_Additional_Info['val_mean_score_sat_math_all'] + data_2019_Additional_Info['val_mean_score_sat_writ_all']
-# data_2020_Additional_Info['SAT Total'] = data_2020_Additional_Info['Metric Value - Average score of students in the current cohort who took the SAT Math exam'] + data_2020_Additional_Info['Metric Value - Average score of students in the current cohort who took the SAT Reading and Writing exam']
-# data_2021_Additional_Info['SAT Total'] = data_2021_Additional_Info['Metric Value - Average score of students in the current cohort who took the SAT Math exam'] + data_2021_Additional_Info['Metric Value - Average score of students in the current cohort who took the SAT Reading and Writing exam']
-# data_2022_Additional_Info['SAT Total'] = data_2022_Additional_Info['Metric Value - Average score of students in the current cohort who took the SAT Math exam'] + data_2022_Additional_Info['Metric Value - Average score of students in the current cohort who took the SAT Reading and Writing exam']
-#
-# data_2014_Additional_Info['SAT Total'] = pd.to_numeric(data_2014_Additional_Info['SAT Total'], errors='coerce')
-# data_2015_Additional_Info['SAT Total'] = pd.to_numeric(data_2015_Additional_Info['SAT Total'], errors='coerce')
-# data_2016_Additional_Info['SAT Total'] = pd.to_numeric(data_2016_Additional_Info['SAT Total'], errors='coerce')
-# data_2017_Additional_Info['SAT Total'] = pd.to_numeric(data_2017_Additional_Info['SAT Total'], errors='coerce')
-# data_2018_Additional_Info['SAT Total'] = pd.to_numeric(data_2018_Additional_Info['SAT Total'], errors='coerce')
-# data_2019_Additional_Info['SAT Total'] = pd.to_numeric(data_2019_Additional_Info['SAT Total'], errors='coerce')
-#
-# data_2014_Additional_Info = data_2014_Additional_Info[data_2014_Additional_Info['SAT Total'] != 0]
-# data_2015_Additional_Info = data_2015_Additional_Info[data_2015_Additional_Info['SAT Total'] != 0]
-# data_2016_Additional_Info = data_2016_Additional_Info[data_2016_Additional_Info['SAT Total'] != 0]
-# data_2017_Additional_Info = data_2017_Additional_Info[data_2017_Additional_Info['SAT Total'] != 0]
-# data_2018_Additional_Info = data_2018_Additional_Info[data_2018_Additional_Info['SAT Total'] != 0]
-# data_2019_Additional_Info = data_2019_Additional_Info[data_2019_Additional_Info['SAT Total'] != 0]
-# data_2020_Additional_Info = data_2020_Additional_Info[data_2020_Additional_Info['SAT Total'] != 0]
-# data_2021_Additional_Info = data_2021_Additional_Info[data_2021_Additional_Info['SAT Total'] != 0]
-# data_2022_Additional_Info = data_2022_Additional_Info[data_2022_Additional_Info['SAT Total'] != 0]
-#
-# data_2014_Additional_Info = data_2014_Additional_Info.copy()
-# data_2015_Additional_Info = data_2015_Additional_Info.copy()
-# data_2016_Additional_Info = data_2016_Additional_Info.copy()
-# data_2017_Additional_Info = data_2017_Additional_Info.copy()
-# data_2018_Additional_Info = data_2018_Additional_Info.copy()
-# data_2019_Additional_Info = data_2019_Additional_Info.copy()
-# data_2020_Additional_Info = data_2020_Additional_Info.copy()
-# data_2021_Additional_Info = data_2021_Additional_Info.copy()
-# data_2022_Additional_Info = data_2022_Additional_Info.copy()
-#
-# data_2014_Additional_Info.loc[:, 'Year'] = 2014
-# data_2015_Additional_Info.loc[:, 'Year'] = 2015
-# data_2016_Additional_Info.loc[:, 'Year'] = 2016
-# data_2017_Additional_Info.loc[:, 'Year'] = 2017
-# data_2018_Additional_Info.loc[:, 'Year'] = 2018
-# data_2019_Additional_Info.loc[:, 'Year'] = 2019
-# data_2020_Additional_Info.loc[:, 'Year'] = 2020
-# data_2021_Additional_Info.loc[:, 'Year'] = 2021
-# data_2022_Additional_Info.loc[:, 'Year'] = 2022
-#
-#
-# all_years_SAT = pd.concat([data_2014_Additional_Info, data_2015_Additional_Info, data_2016_Additional_Info, data_2017_Additional_Info, data_2018_Additional_Info,data_2019_Additional_Info, data_2020_Additional_Info, data_2021_Additional_Info, data_2022_Additional_Info], ignore_index=True)
-# all_years_SAT = all_years_SAT.sort_values(by='Year')
-# avg_SAT_score = all_years_SAT.groupby('Year')['SAT Total'].mean().reset_index()
-# plt.scatter(all_years_SAT['Year'], all_years_SAT['SAT Total'], label='Data Points', color='blue')
-# plt.plot(avg_SAT_score['Year'], avg_SAT_score['SAT Total'], label='Average Trend Line', color='orange', linewidth=2)
-# plt.xlabel('Year')
-# plt.ylabel('SAT Total')
-# plt.title('SAT Total Scores Over Years')
-# plt.legend()
-# plt.show()
