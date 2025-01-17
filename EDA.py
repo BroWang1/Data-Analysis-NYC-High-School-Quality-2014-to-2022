@@ -172,6 +172,8 @@ bottom_5_per_year = (
 #print(bottom_5_per_year[['School Name', 'SAT Total', 'Year']])
 
 avg_SAT_score = all_years_SAT.groupby('Year')['SAT Total'].mean().reset_index()     # Average SAT
+avg_SAT_score['percent_increase'] = avg_SAT_score['SAT Total'].pct_change()
+print(avg_SAT_score)
 percentile_75 = all_years_SAT.groupby('Year')['SAT Total'].quantile(0.75).reset_index()  # 75th percentile SAT
 #print(percentile_75)
 
