@@ -1,6 +1,4 @@
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 import numpy as np
 
 # File paths and corresponding years
@@ -47,9 +45,8 @@ def convert_sheet_to_numeric_or_keep(df):
         col = col.replace({'N<15': 0, 'N<5': 0, 'N/A': 0, '': 0})
         col = col.replace('%', '', regex=True)
         col = col.replace(r'^\s*$', '0', regex=True)
-        numeric_col = pd.to_numeric(col, errors='coerce')
-        return np.where(numeric_col.notna(), numeric_col, col)
-
+        numeric_col = pd.to_numeric(col, errors='coerce').fillna(value=col)
+        return numeric_col
     return df.apply(lambda col: convert_numeric_or_keep(col))
 
 
@@ -103,4 +100,109 @@ data_2020_Framework = get_sheet_data('2020/21', "Framework")
 data_2021_Framework = get_sheet_data('2021/22', "Framework")
 data_2022_Framework = get_sheet_data('2022/23', "Framework")
 
-all_data_Framework
+
+def process_year_data(data, year, sat_math_score, sat_writing_score, new_column_name='SAT Total'):
+    data[new_column_name] = data[sat_math_score] + data[sat_writing_score]  # total sat score
+    data[new_column_name] = pd.to_numeric(data[new_column_name], errors='coerce')   # now we make sure that it is numeric
+    # Remove rows with SAT Total equal to 0 or missing
+    data = data[data[new_column_name] != 0]
+    # Add year column
+    data = data.copy()
+    data.loc[:, 'Year'] = year
+    return data
+
+# List of years and corresponding column names for SAT math and writing scores
+years_data = [
+    (2014, 'Average Score SAT Math', 'Average Score SAT Writing', 'SAT Total'),
+    (2015, 'Average Score SAT Math', 'Average Score SAT Writing', 'SAT Total'),
+    (2016, 'Metric Value - Average Score SAT Math', 'Metric Value - Average Score SAT Reading and Writing', 'SAT Total'),
+    (2017, 'Metric Value - Average score of students in the current cohort who took the SAT Math exam',
+     'Metric Value - Average score of students in the current cohort who took the SAT Reading and Writing exam',
+     'SAT Total'),
+    (2018, 'Metric Value - Average score of students in the current cohort who took the SAT Math exam',
+     'Metric Value - Average score of students in the current cohort who took the SAT Reading and Writing exam',
+     'SAT Total'),
+    (2019, 'val_mean_score_sat_math_all', 'val_mean_score_sat_writ_all', 'SAT Total'),
+    (2020, 'Metric Value - Average score of students in the current cohort who took the SAT Math exam',
+     'Metric Value - Average score of students in the current cohort who took the SAT Reading and Writing exam',
+     'SAT Total'),
+    (2021, 'Metric Value - Average score of students in the current cohort who took the SAT Math exam',
+     'Metric Value - Average score of students in the current cohort who took the SAT Reading and Writing exam',
+     'SAT Total'),
+    (2022, 'Metric Value - Average score of students in the current cohort who took the SAT Math exam',
+     'Metric Value - Average score of students in the current cohort who took the SAT Reading and Writing exam',
+     'SAT Total')
+]
+
+# Loading the data dynamically (assuming the data variables are already loaded as before)
+all_years_data = []
+for year, sat_math_col, sat_writing_col, new_column_name in years_data:
+    data = globals().get(f"data_{year}_Additional_Info")
+    if data is not None:
+        processed_data = process_year_data(data, year, sat_math_col, sat_writing_col, new_column_name)
+        all_years_data.append(processed_data)
+
+# Combine all the processed data into one DataFrame
+all_years_SAT = (
+    pd
+    .concat(all_years_data, ignore_index=True)
+    .sort_values(by='Year')
+)
+#print(all_years_SAT[all_years_SAT['Year'] == 2021].head(15))
+#print(all_years_SAT.dtypes)
+#This is to check out of all the school in the past 8 years what is the ranking
+# sorted_df = all_years_SAT.sort_values(by='SAT Total', ascending=False)
+# print(sorted_df[['School Name', 'SAT Total', 'Year']].head(10))
+
+#top 10 per year sat scores
+top_5_per_year = (
+    all_years_SAT                                                       # DataFrame
+    .groupby('Year', group_keys=False)                              # Grouping by the Year
+    .apply(lambda x: x.sort_values(by='SAT Total', ascending=False))    # Since in a Group using apply to sort
+    .head(5)                                                            # This is to get the top 5 from the sorted
+)
+#print(top_5_per_year[['School Name', 'SAT Total', 'Year']])
+
+bottom_5_per_year = (
+    all_years_SAT.groupby('Year', group_keys=False)
+    .apply(lambda x: x.dropna(subset=['SAT Total'])
+    .sort_values(by='SAT Total', ascending=False))
+    .tail(5)
+)
+#print(bottom_5_per_year[['School Name', 'SAT Total', 'Year']])
+
+avg_SAT_score = all_years_SAT.groupby('Year')['SAT Total'].mean().reset_index()     # Average SAT
+percentile_75 = all_years_SAT.groupby('Year')['SAT Total'].quantile(0.75).reset_index()  # 75th percentile SAT
+#print(percentile_75)
+
+# I was trying to get data for what happens to students after graduation but the data is unusable
+# keyword = 'Postsecondary'
+# postsecondary_columns = [col for col in data_2022_Additional_Info.columns if keyword in col]
+# print(data_2022_Additional_Info[postsecondary_columns].describe())
+# null_zero = data_2022_Additional_Info[postsecondary_columns].isnull()|data_2022_Additional_Info[postsecondary_columns] == 0
+# print(null_zero.sum())
+#
+# postsecondary_columns = [col for col in data_2021_Additional_Info.columns if keyword in col]
+# print(data_2021_Additional_Info[postsecondary_columns].describe())
+# null_zero = data_2021_Additional_Info[postsecondary_columns].isnull()|data_2021_Additional_Info[postsecondary_columns] == 0
+# print(null_zero.sum())
+
+
+total_SAT_score = all_years_SAT[all_years_SAT['Year'] == 2020][['DBN', 'SAT Total']].reset_index(drop=True)
+# print(total_SAT_score[['DBN', 'SAT Total']])
+# print(total_SAT_score.dtypes)
+merged_2020 = pd.merge(data_2020, data_2020_Student, on="DBN", how="inner")
+merged_2020 = pd.merge(merged_2020, data_2020_Additional_Info, on="DBN", how="inner")
+merged_2020 = pd.merge(merged_2020, total_SAT_score, on="DBN", how="inner")
+df_combined = merged_2020.copy()
+# if len(total_SAT_score) == len(df_combined):
+#     df_combined['SAT Total'] = total_SAT_score
+# else:
+#     # Handle the case where lengths don't match
+#     print(f"Length mismatch: {len(df_combined)} != {len(total_SAT_score)}")
+# df_combined['SAT Total'] = total_SAT_score
+rem_keyword = ['Asian', 'Black', 'Hispanic', 'White', 'Pacific Islander', 'Native American', 'Comparison Group',
+               'N count', 'Female', 'Male', 'Multiracial', ]
+df_combined = df_combined.drop([col for col in df_combined.columns if any(k in col for k in rem_keyword)], axis=1)
+numeric_df = df_combined.select_dtypes(include=['number'])
+print(numeric_df.columns)
