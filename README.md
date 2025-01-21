@@ -18,13 +18,32 @@ Notable Insight:
 - From 2016 to 2022 we have dropped 5.39% or 51 points  
 - Right-skewed distribution since the 75th Percentile is close to the mean  
 
+Correlations With SAT Totals
 ![Heatmap](images/NHeatMap.png)
-Notable Insight:
-- Stuff
-![Heatmap](images/PHeatMap.png)
-Notable Insight:
-- Stuff
+Constraint:  
+mask = (column_correlations == 1) | (column_correlations < -.3)  
+Correlations Less than -.3
 
+Notable Insight:  
+- No negative correlations exceed -0.7.
+- Postsecondary enrollment in CUNY shows a negative correlation, despite the expectation that higher SAT scores would facilitate admission to CUNY colleges.
+- The percentage of students in temporary housing, chronically absent, or performing at Level 1 in 8th grade are the factors most negatively correlated with SAT scores.  
+
+Shortened Phases:
+- L 3rd CW (Lowest Third Citywide)
+- SETSS (Special Ed Teacher Support Service)
+- ICT (Integrated Co-Teaching)
+- IEPs (Individualized Education Programs)
+- ELL (English-Language Learner)  
+
+![Heatmap](images/PHeatMap.png)
+Constraint:  
+mask = (column_correlations == 1) | (column_correlations > .7)
+Correlations Greater than .7
+Notable Insight:  
+- 8th Grade Math and English scores show the highest correlation with SAT performance.
+- College persistence, which measures how well students perform in college after high school, also demonstrates a strong correlation, as expected.
+- Surprisingly, the ACT does not exhibit a stronger correlation with the SAT compared to other factors, contrary to expectations.
 
 
 
