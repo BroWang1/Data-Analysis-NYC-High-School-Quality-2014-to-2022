@@ -18,8 +18,12 @@ Notable Insight:
 - From 2016 to 2022 we have dropped 5.39% or 51 points  
 - Right-skewed distribution since the 75th Percentile is close to the mean  
 
-![Heatmap](images/heatmap.png)
+![Heatmap](images/NHeatMap.png)
 Notable Insight:
+- Stuff
+![Heatmap](images/PHeatMap.png)
+Notable Insight:
+- Stuff
 
 
 
