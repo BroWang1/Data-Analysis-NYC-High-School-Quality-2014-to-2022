@@ -172,10 +172,10 @@ bottom_5_per_year = (
 #print(bottom_5_per_year[['School Name', 'SAT Total', 'Year']])
 
 avg_SAT_score = all_years_SAT.groupby('Year')['SAT Total'].mean().reset_index()     # Average SAT
-avg_SAT_score['percent_increase'] = avg_SAT_score['SAT Total'].pct_change()
-print(avg_SAT_score)
+#avg_SAT_score['percent_increase'] = avg_SAT_score['SAT Total'].pct_change()
+#print(avg_SAT_score)
 percentile_75 = all_years_SAT.groupby('Year')['SAT Total'].quantile(0.75).reset_index()  # 75th percentile SAT
-#print(percentile_75)
+percentile_95 = all_years_SAT.groupby('Year')['SAT Total'].quantile(0.95).reset_index()  # 75th percentile SAT
 
 # I was trying to get data for what happens to students after graduation but the data is unusable
 # keyword = 'Postsecondary'
@@ -190,13 +190,13 @@ percentile_75 = all_years_SAT.groupby('Year')['SAT Total'].quantile(0.75).reset_
 # print(null_zero.sum())
 
 
-total_SAT_score = all_years_SAT[all_years_SAT['Year'] == 2020][['DBN', 'SAT Total']].reset_index(drop=True)
+total_SAT_score = all_years_SAT[all_years_SAT['Year'] == 2022][['DBN', 'SAT Total']].reset_index(drop=True)
 # print(total_SAT_score[['DBN', 'SAT Total']])
 # print(total_SAT_score.dtypes)
-merged_2020 = pd.merge(data_2020, data_2020_Student, on="DBN", how="inner")
-merged_2020 = pd.merge(merged_2020, data_2020_Additional_Info, on="DBN", how="inner")
-merged_2020 = pd.merge(merged_2020, total_SAT_score, on="DBN", how="inner")
-df_combined = merged_2020.copy()
+merged_2022 = pd.merge(data_2022, data_2022_Student, on="DBN", how="inner")
+merged_2022 = pd.merge(merged_2022, data_2022_Additional_Info, on="DBN", how="inner")
+merged_2022 = pd.merge(merged_2022, total_SAT_score, on="DBN", how="inner")
+df_combined = merged_2022.copy()
 # if len(total_SAT_score) == len(df_combined):
 #     df_combined['SAT Total'] = total_SAT_score
 # else:
@@ -204,7 +204,53 @@ df_combined = merged_2020.copy()
 #     print(f"Length mismatch: {len(df_combined)} != {len(total_SAT_score)}")
 # df_combined['SAT Total'] = total_SAT_score
 rem_keyword = ['Asian', 'Black', 'Hispanic', 'White', 'Pacific Islander', 'Native American', 'Comparison Group',
-               'N count', 'Female', 'Male', 'Multiracial', ]
+               'N count', 'Female', 'Male', 'Multiracial', 'N Count', 'Metric Rating', 'Comparison Group',
+               'SAT Math', 'SAT Reading']
 df_combined = df_combined.drop([col for col in df_combined.columns if any(k in col for k in rem_keyword)], axis=1)
 numeric_df = df_combined.select_dtypes(include=['number'])
-print(numeric_df.columns)
+numeric_df.columns = (
+    numeric_df.columns
+    .str.replace('Metric Value - ', '', regex=False)  # Remove specific substring
+    .str.replace('Metric Score - ', '', regex=False)
+    .str.replace('Average', 'Avg.', regex=False)
+    .str.replace('Percentage ', '% ', regex=False)
+    .str.replace('Percentage of students ', '% Students ', regex=False)
+    .str.replace('Percent ', '% ', regex=False)
+    .str.replace('of ', '', regex=False)
+    .str.replace('in ', '', regex=False)
+    .str.replace('for ', '', regex=False)
+    .str.replace('with ', '', regex=False)
+    .str.replace('High School ', 'H.S. ', regex=False)
+    .str.replace('Graduation ', 'Grad.', regex=False)
+    .str.replace('who took the ', '', regex=False)
+    .str.replace('in the current cohort who took the ', '', regex=False)
+    .str.replace('English', 'Eng.', regex=False)
+    .str.replace('Postsecondary Enrollment', 'Postsec. Enrollment', regex=False)
+    .str.replace('recommended', 'rec.', regex=False)
+    .str.replace('Out Students at ', '', regex=False)
+    .str.replace('the current cohort ', '', regex=False)
+    .str.replace('the current year who ', '', regex=False)
+    .str.replace('are college ready ', '', regex=False)
+    .str.replace('Lowest Third Citywide', 'L 3rd CW', regex=False)
+    .str.replace('Students Who', '', regex=False)
+    .str.replace('and', '&', regex=False)
+    .str.replace('months', 'M', regex=False)
+    .str.replace('Months', 'M', regex=False)
+    .str.replace('year', 'Y', regex=False)
+    .str.replace('Algebra', 'Alg', regex=False)
+    .str.replace('Chemistry', 'Chem', regex=False)
+    .str.replace('scored ', '', regex=False)
+)
+numeric_df = numeric_df.rename(columns={
+    'SAT Total_x': 'SAT Total',
+    '% students rec. general ed settings Special Ed Teacher Support Services (SETSS)': '% students rec. SETSS',
+    '% students rec. Integrated Co-Teaching (ICT) services' : '% students rec. ICT',
+    '% students who took a Languages Other Than Eng. Regents scored 65+': '% students Other Languages Regents scored 65+',
+    'Movement Students IEPs to Less Restrictive Environments': 'Less Restrictive Environments',
+    '% students Eng. Regents exam & (scored 70+)': '% students Eng. Regents (scored 70+)',
+    '% students Geometry Regents exam & (scored 70+)': '% students Geometry Regents (scored 70+)',
+    '% students Alg I Regents exam & (scored 70+)': '% students Alg I Regents (scored 70+)',
+})
+numeric_df = numeric_df.drop('SAT Total_y', axis=1)
+for col in numeric_df.columns:
+    print(col)
