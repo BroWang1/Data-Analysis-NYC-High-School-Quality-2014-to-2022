@@ -59,7 +59,13 @@ There are the excel files as well in the repository just in case you can't find 
 
 # Note to self (What I learned)
 ___
-- Loaded muliple files and associated year
-- Converted values of that are strings like numerics into integers
-- Setting up DataFrame where I can call the sheet name and year
-- Applied operations & Concatnated the Data 
+- Loaded muliple files and associated year  
+- Converted values of that are strings like numerics into integers  
+- Setting up DataFrame where I can call the sheet name, year, columns
+- Applied operations & Concatnated the Data  
+- Setting Up Graphs
+- Removing irrelvant columns
+- Method Chaining
+- .groupby()
+- .apply
+- Putting on masks so I can filter through data easier
