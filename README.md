@@ -45,6 +45,8 @@ Notable Insight:
 - College persistence, which measures how well students perform in college after high school, also demonstrates a strong correlation, as expected.
 - Surprisingly, the ACT does not exhibit a stronger correlation with the SAT compared to other factors, contrary to expectations.
 
+Most Reoccuring Schools that Performed Well w/ SAT
+![Data](images/SATstats.png)
 
 
 # Data Source
@@ -57,4 +59,7 @@ There are the excel files as well in the repository just in case you can't find 
 
 # Note to self (What I learned)
 ___
-
+- Loaded muliple files and associated year
+- Converted values of that are strings like numerics into integers
+- Setting up DataFrame where I can call the sheet name and year
+- Applied operations & Concatnated the Data 
