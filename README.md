@@ -45,7 +45,7 @@ Notable Insight:
 - College persistence, which measures how well students perform in college after high school, also demonstrates a strong correlation, as expected.
 - Surprisingly, the ACT does not exhibit a stronger correlation with the SAT compared to other factors, contrary to expectations.
 
-Most Reoccuring Schools that Performed Well w/ SAT
+Top 5 HS Most Reoccuring Schools
 ![Data](images/SATstats.png)
 
 
