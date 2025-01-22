@@ -151,25 +151,43 @@ all_years_SAT = (
 #print(all_years_SAT[all_years_SAT['Year'] == 2021].head(15))
 #print(all_years_SAT.dtypes)
 #This is to check out of all the school in the past 8 years what is the ranking
-# sorted_df = all_years_SAT.sort_values(by='SAT Total', ascending=False)
+sorted_df = all_years_SAT.sort_values(by='SAT Total', ascending=False)
 # print(sorted_df[['School Name', 'SAT Total', 'Year']].head(10))
 
 #top 10 per year sat scores
 top_5_per_year = (
-    all_years_SAT                                                       # DataFrame
-    .groupby('Year', group_keys=False)                              # Grouping by the Year
-    .apply(lambda x: x.sort_values(by='SAT Total', ascending=False))    # Since in a Group using apply to sort
-    .head(5)                                                            # This is to get the top 5 from the sorted
+    all_years_SAT
+    .groupby('Year', group_keys=True)                             # Group data by 'Year'
+    .apply(lambda x: x.nlargest(5, 'SAT Total'))                  # Select top 5 rows per group
+    .reset_index(drop=True)                                       # Reset the index for clarity
 )
-#print(top_5_per_year[['School Name', 'SAT Total', 'Year']])
+highest_scores = (
+    top_5_per_year
+    .loc[top_5_per_year.groupby('School Name')['SAT Total'].idxmax()]  # Get rows with the max SAT for each school
+    [['School Name', 'SAT Total', 'Year']]                             # Keep relevant columns
+    .rename(columns={'SAT Total': 'Highest_SAT_Score', 'Year': 'Year_of_Highest_Score'})
+)
+# print(f'Highest Score : {highest_scores.columns}')
+appearance_counts = (
+    top_5_per_year['School Name']
+    .value_counts()
+    .reset_index()
+    .rename(columns={'index': 'School Name'})
+)
+# print(f'appearance_counts : {appearance_counts.columns}')
+school_stats = (
+    appearance_counts
+    .merge(highest_scores, on='School Name', how='left')
+)
+print(school_stats)
 
-bottom_5_per_year = (
-    all_years_SAT.groupby('Year', group_keys=False)
-    .apply(lambda x: x.dropna(subset=['SAT Total'])
-    .sort_values(by='SAT Total', ascending=False))
-    .tail(5)
-)
-#print(bottom_5_per_year[['School Name', 'SAT Total', 'Year']])
+# bottom_5_per_year = (
+#     all_years_SAT.groupby('Year', group_keys=False)
+#     .apply(lambda x: x.dropna(subset=['SAT Total'])
+#     .sort_values(by='SAT Total', ascending=False))
+#     .tail(5)
+# )
+# print(bottom_5_per_year[['School Name', 'SAT Total', 'Year']])
 
 avg_SAT_score = all_years_SAT.groupby('Year')['SAT Total'].mean().reset_index()     # Average SAT
 #avg_SAT_score['percent_increase'] = avg_SAT_score['SAT Total'].pct_change()
@@ -252,5 +270,5 @@ numeric_df = numeric_df.rename(columns={
     '% students Alg I Regents exam & (scored 70+)': '% students Alg I Regents (scored 70+)',
 })
 numeric_df = numeric_df.drop('SAT Total_y', axis=1)
-for col in numeric_df.columns:
-    print(col)
+# for col in numeric_df.columns:
+#     print(col)
