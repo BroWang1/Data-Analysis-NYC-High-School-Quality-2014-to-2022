@@ -18,14 +18,35 @@ Notable Insight:
 - From 2016 to 2022 we have dropped 5.39% or 51 points  
 - Right-skewed distribution since the 75th Percentile is close to the mean  
 
+Correlations With SAT Totals
 ![Heatmap](images/NHeatMap.png)
-Notable Insight:
-- Stuff
+Constraint:  
+mask = (column_correlations == 1) | (column_correlations < -.3)  
+Correlations Less than -.3
+
+Notable Insight:  
+- No negative correlations exceed -0.7.
+- Postsecondary enrollment in CUNY shows a negative correlation, despite the expectation that higher SAT scores would facilitate admission to CUNY colleges.
+- The percentage of students in temporary housing, chronically absent, or performing at Level 1 in 8th grade are the factors most negatively correlated with SAT scores.  
+
+Shortened Phases:
+- L 3rd CW (Lowest Third Citywide)
+- SETSS (Special Ed Teacher Support Service)
+- ICT (Integrated Co-Teaching)
+- IEPs (Individualized Education Programs)
+- ELL (English-Language Learner)  
+
 ![Heatmap](images/PHeatMap.png)
-Notable Insight:
-- Stuff
+Constraint:  
+mask = (column_correlations == 1) | (column_correlations > .7)
+Correlations Greater than .7
+Notable Insight:  
+- 8th Grade Math and English scores show the highest correlation with SAT performance.
+- College persistence, which measures how well students perform in college after high school, also demonstrates a strong correlation, as expected.
+- Surprisingly, the ACT does not exhibit a stronger correlation with the SAT compared to other factors, contrary to expectations.
 
-
+Top 5 HS Most Reoccuring Schools
+![Data](images/SATstats.png)
 
 
 # Data Source
@@ -38,4 +59,13 @@ There are the excel files as well in the repository just in case you can't find 
 
 # Note to self (What I learned)
 ___
-
+- Loaded muliple files and associated year  
+- Converted values of that are strings like numerics into integers  
+- Setting up DataFrame where I can call the sheet name, year, columns
+- Applied operations & Concatnated the Data  
+- Setting Up Graphs
+- Removing irrelvant columns
+- Method Chaining
+- .groupby()
+- .apply
+- Putting on masks so I can filter through data easier
